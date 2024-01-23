@@ -1,0 +1,7 @@
+service statistics_service /odm/bin/statistics_service
+    class hal
+    user system
+    group system
+
+on boot
+    start statistics_service

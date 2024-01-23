@@ -1,0 +1,6 @@
+type statistics_service_exec, exec_type, vendor_file_type, file_type;
+
+allow statistics_service statistics_service_api:service_manager add;
+allow statistics_service servicemanager:binder { call transfer };
+
+init_daemon_domain(statistics_service)

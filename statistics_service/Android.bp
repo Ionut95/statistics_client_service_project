@@ -1,0 +1,43 @@
+cc_binary {
+    name: "statistics_service",
+    srcs: ["native/src/**/*.cpp"],
+    local_include_dirs: ["native/src/impl"],
+    device_specific: true,
+    init_rc: ["statistics_service.rc"],
+    shared_libs: [
+        "liblog",
+        "libutils",
+        "libbase",
+        "libbinder_ndk"
+        "statistics.service.api-ndk_platform",
+    ],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wunused",
+        "-Wunreachable-code",
+        "-Wshadow",
+    ],
+}
+
+aidl_interface {
+    name: "statistics.service.api",
+    vendor_available: true,
+    srcs: ["interfaces/**/*.aidl"],
+    local_include_dirs: "interfaces",
+    versions: ["1"],
+    stability: "vintf",
+    backend: {
+        java: {
+            enabled: true,
+            platform_apis: true,
+        },
+        cpp: {
+            enabled: false,
+        },
+        ndk: {
+            enabled: true,
+        },
+    },
+}
