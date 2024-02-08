@@ -2,7 +2,7 @@
 package statistics.service.api;
 
 @VintfStability
-interface IExampleService {
+interface IStatisticsService {
     float getCpuTemperature();
     float getGpuTemperature();
     float getAmbientTemperature();

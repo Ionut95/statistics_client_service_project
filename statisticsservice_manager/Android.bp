@@ -1,0 +1,19 @@
+java_library {
+    name: "statistics.service.statisticsservicemanager",
+    srcs: [ "src/**/*.java" ],
+    static_libs: [ "statistics.service.api-V2-java" ],
+    //required: [ "statistics.service.statisticsservicemanager.xml" ],
+    system_ext_specific: true,
+    //sdk_version: "current",
+    //vendor: true,
+    platform_apis: true,
+    installable: true,
+}
+
+// prebuilt_etc {
+//     name: "statistics.service.statisticsservicemanager.xml",
+//     src: "statistics.service.statisticsservicemanager.xml",
+//     filename_from_src: true,
+//     relative_install_path: "permissions",
+//     system_ext_specific: true,
+// }

@@ -2,7 +2,7 @@
     <hal format="aidl" optional="true">
         <name>statistics.service.api</name>
         <interface>
-            <name>IExampleService</name>
+            <name>IStatisticsService</name>
             <instance>default</instance>
         </interface>
     </hal>
