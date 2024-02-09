@@ -3,6 +3,9 @@
 #include <utils/Log.h>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <numeric>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -23,60 +26,9 @@ namespace statistics {
             return S_INSTANCE;
         }
 
-        // std::vector<float> StatisticsService::temperatures {120, 33.4, 19,
-        //                                                     256.1, 22, 41.9,
-        //                                                     320.8, 53.4, 19,
-        //                                                     442.1, 22, 14.9,
-        //                                                     520, 33.4, 19.7,
-        //                                                     65.1, 12, 44.9,
-        //                                                     72, 33.4, 79,
-        //                                                     856.1, 22, 44.9,
-        //                                                     940, 33.4, 19.1,
-        //                                                     1053.1, 27, 24.9,
-        //                                                     1120, 33.4, 19,
-        //                                                     1256.1, 22, 41.9,
-        //                                                     1320.8, 53.4, 19,
-        //                                                     1442.1, 22, 14.9,
-        //                                                     1520, 33.4, 19.7,
-        //                                                     165.1, 12, 44.9,
-        //                                                     172, 33.4, 79,
-        //                                                     1856.1, 22, 44.9,
-        //                                                     1940, 33.4, 19.1,
-        //                                                     2053.1, 27, 24.9,
-        //                                                     2120, 33.4, 19,
-        //                                                     2256.1, 22, 41.9,
-        //                                                     2320.8, 53.4, 19,
-        //                                                     2442.1, 22, 14.9,
-        //                                                     2520, 33.4, 19.7,
-        //                                                     265.1, 12, 44.9,
-        //                                                     272, 33.4, 79,
-        //                                                     2856.1, 22, 44.9,
-        //                                                     2940, 33.4, 19.1,
-        //                                                     3053.1, 27, 24.9,
-        //                                                     3120, 33.4, 19,
-        //                                                     3256.1, 22, 41.9,
-        //                                                     3320.8, 53.4, 19,
-        //                                                     3442.1, 22, 14.9,
-        //                                                     3520, 33.4, 19.7,
-        //                                                     365.1, 12, 44.9,
-        //                                                     372, 33.4, 79,
-        //                                                     3856.1, 22, 44.9,
-        //                                                     3940, 33.4, 19.1,
-        //                                                     4053.1, 27, 24.9,
-        //                                                     4120, 33.4, 19,
-        //                                                     4256.1, 22, 41.9,
-        //                                                     4320.8, 53.4, 19,
-        //                                                     4442.1, 22, 14.9,
-        //                                                     4520, 33.4, 19.7,
-        //                                                     465.1, 12, 44.9,
-        //                                                     472, 33.4, 79,
-        //                                                     4856.1, 22, 44.9,
-        //                                                     4940, 33.4, 19.1,
-        //                                                     5053.1, 27, 24.9};
-
         StatisticsService::StatisticsService()
         {
-
+            readTemperatures();
         }
 
         StatisticsService::~StatisticsService()
@@ -147,105 +99,188 @@ namespace statistics {
             return ndk::ScopedAStatus::ok();
         }
 
-        std::vector<float> StatisticsService::readTemperatures() {
-            std::vector<float> values;
-
-            if(current_line_to_read > TOTAL_NR_LINES)
-                current_line_to_read = 1;
-
+        void StatisticsService::readTemperatures() 
+        {
             std::ifstream file("/vendor/etc/temperatures.csv");
 
             if (file.is_open())
             {
-                ALOGI("%s:%d: file temperatures.csv open, reading values... ", __FUNCTION__, __LINE__);
+                ALOGI("%s:%d: std::cout << file temperatures.csv open, reading values... ", __FUNCTION__, __LINE__);
                 std::string line;
-                for(int i = 1; getline(file, line); ++i)
+                
+                while(getline(file, line))
                 {
-                    if(i == current_line_to_read) {
-                        std::stringstream stream(line);
-                        std::string value;
+                    std::stringstream stream(line);
+                    std::string value;
+                    int current_value_index = 0;
 
-                        while(getline(stream, value, ','))
-                        {
-                            std::stringstream token(value);
-                            float myFloat;
-                            token >> myFloat;
-                            values.push_back(myFloat);
+                    while(getline(stream, value, ','))
+                    {
+                        switch (current_value_index) {
+                            case 0:
+                                all_cpu_temperatures.push_back(::std::stof(value));
+                                break;
+                            case 1:
+                                all_gpu_temperatures.push_back(::std::stof(value));
+                                break;
+                            case 2:
+                                all_ambient_temperatures.push_back(::std::stof(value));
+                                break;
+                            default:
+                                ALOGE("%s:%d: Error when pushing values", __FUNCTION__, __LINE__);
+                                break;
                         }
-
-                        ++current_line_to_read;
-                        file.close();
-                        break;
+                        ++current_value_index;
                     }
                 }
+                file.close();
             }
             else
             {
-                ALOGE("%s:%d: Error reading file ", __FUNCTION__, __LINE__);
-                for(int it = 0; it < 3; ++it) 
-                {
-                    values.push_back(0);
-                }
+                ALOGE("%s:%d: std::cout << Error reading file ", __FUNCTION__, __LINE__);
             }
-            return values;
         }
 
-        // std::vector<float> StatisticsService::readTemperatures() 
-        // {
-        //     std::vector<float> values;
-        //     ALOGI("%s:%d: Inside readTemperatures(), printing current index %d", __FUNCTION__, __LINE__, (int)current_index);
-        //     if(current_index == temperatures.size())
-        //     {
-        //         current_index = 0;
-        //     }
+        float StatisticsService::getCpuValue()
+        {
+            float cpu_value = *(all_cpu_temperatures.begin() + iterator_all_cpu_temps);
+            std::cout << "$" << iterator_all_cpu_temps << "$";
+            ++iterator_all_cpu_temps;
+            iterated_cpu_values.push_back(cpu_value);
 
-        //     if (!temperatures.empty()) 
-        //     {
-        //         ALOGI("%s:%d: Inside readTemperatures(), reading temperatures...", __FUNCTION__, __LINE__);
-        //         for(size_t it = 0; it < ITEMS_PER_LINE; ++it)
-        //         {
-        //             values.push_back(temperatures[current_index]);
-        //             ++current_index;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         ALOGE("%s:%d: Error temperatures vector empty ", __FUNCTION__, __LINE__);
-        //         for(size_t it = 0; it < ITEMS_PER_LINE; ++it) 
-        //         {
-        //             values.push_back(0);
-        //         }
-        //     }
+            if(iterator_all_cpu_temps == all_cpu_temperatures.size())
+                iterator_all_cpu_temps = 0;
+            
+            return cpu_value;
+        }
 
-        //     return values;
-        // }
+        float StatisticsService::getGpuValue()
+        {
+            float gpu_value = *(all_gpu_temperatures.begin() + iterator_all_gpu_temps);
+            std::cout << "$" << iterator_all_gpu_temps << "$";
+            ++iterator_all_gpu_temps;
+            iterated_gpu_values.push_back(gpu_value);
+
+            if(iterator_all_gpu_temps == all_gpu_temperatures.size())
+                iterator_all_gpu_temps = 0;
+
+            return gpu_value;
+        }
+
+        float StatisticsService::getAmbientValue()
+        {
+            float ambient_value = *(all_ambient_temperatures.begin() + iterator_all_ambient_temps);
+            std::cout << "$" << iterator_all_ambient_temps << "$";
+            ++iterator_all_ambient_temps;
+            iterated_ambient_values.push_back(ambient_value);
+
+            if(iterator_all_ambient_temps == all_ambient_temperatures.size())
+                iterator_all_ambient_temps = 0;
+
+            return ambient_value;
+        }
+
+        float StatisticsService::calculateAverageCpu()
+        {
+            if(iterator_all_cpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_cpu_values.erase(iterated_cpu_values.begin() + 1, iterated_cpu_values.end()); 
+
+            float sum = std::accumulate(iterated_cpu_values.begin(), iterated_cpu_values.end(), 0.0f);
+            std::cout << "$" << sum << "$";
+
+            if (sum == 0)
+            {
+                std::cout << "&sum is 0&";
+                return sum;
+            }
+
+            return sum / iterated_cpu_values.size();
+        }
+
+        float StatisticsService::calculateAverageGpu()
+        {
+            if(iterator_all_gpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_gpu_values.erase(iterated_gpu_values.begin() + 1, iterated_gpu_values.end());
+
+            float sum = std::accumulate(iterated_gpu_values.begin(), iterated_gpu_values.end(), 0.0f);
+            std::cout << "$" << sum << "$";
+            
+            if (sum == 0)
+            {
+                std::cout << "&sum is 0&";
+                return sum;
+            }
+            
+            return sum / iterated_gpu_values.size();
+        }
+
+        float StatisticsService::calculateAverageAmbient()
+        {
+            if (iterator_all_ambient_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_ambient_values.erase(iterated_ambient_values.begin() + 1, iterated_ambient_values.end());
+
+            float sum = std::accumulate(iterated_ambient_values.begin(), iterated_ambient_values.end(), 0.0f);
+            std::cout << "$" << sum << "$";
+            
+            if (sum == 0)
+            {
+                std::cout << "&sum is 0&";
+                return sum;
+            }
+            
+            return sum / iterated_ambient_values.size();
+        }
+
+        float StatisticsService::calculateMaxCpu()
+        {
+            if(iterator_all_cpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_cpu_values.erase(iterated_cpu_values.begin() + 1, iterated_cpu_values.end());
+
+            return *(std::max_element(iterated_cpu_values.begin(), iterated_cpu_values.end()));
+        }
+
+        float StatisticsService::calculateMaxGpu()
+        {
+            if(iterator_all_gpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_gpu_values.erase(iterated_gpu_values.begin() + 1, iterated_gpu_values.end());
+
+            return *(std::max_element(iterated_gpu_values.begin(), iterated_gpu_values.end()));
+        }
+
+        float StatisticsService::calculateMaxAmbient()
+        {
+            if (iterator_all_ambient_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+                iterated_ambient_values.erase(iterated_ambient_values.begin() + 1, iterated_ambient_values.end());
+
+            return *(std::max_element(iterated_ambient_values.begin(), iterated_ambient_values.end()));
+        }
+
+
 
 
         float StatisticsService::getValue(CallbacksId id)
         {
-            std::vector<float> read_values = readTemperatures();
-
             switch (id) {
                 case CallbacksId::CpuTemperature:
-                    return read_values[0];
+                    return getCpuValue();
                 case CallbacksId::GpuTemperature:
-                    return read_values[1];
+                    return getGpuValue();
                 case CallbacksId::AmbientTemperature:
-                    return read_values[2];
+                    return getAmbientValue();
                 case CallbacksId::AverageCpuTemperature:
-                    return read_values[0];
+                    return calculateAverageCpu();
                 case CallbacksId::AverageGpuTemperature:
-                    return read_values[1];
+                    return calculateAverageGpu();
                 case CallbacksId::AverageAmbientTemperature:
-                    return read_values[2];
+                    return calculateAverageAmbient();
                 case CallbacksId::MaxCpuTemperature:
-                    return read_values[0];
+                    return calculateMaxCpu();
                 case CallbacksId::MaxGpuTemperature:
-                    return read_values[1];
+                    return calculateMaxGpu();
                 case CallbacksId::MaxAmbientTemperature:
-                    return read_values[2];
+                    return calculateMaxAmbient();
                 default:
-                    return 0.0;
+                    return -0.1;
             }
         }
     }

@@ -17,7 +17,7 @@ namespace statistics {
 
             static ::std::shared_ptr<StatisticsService> getInstance();
 
-            // IStatisticsService AIDL interface callbacks
+            IStatisticsService AIDL interface callbacks
             ::ndk::ScopedAStatus getCpuTemperature(float* value_return) override;
             ::ndk::ScopedAStatus getGpuTemperature(float* value_return) override;
             ::ndk::ScopedAStatus getAmbientTemperature(float* value_return) override;
@@ -35,13 +35,8 @@ namespace statistics {
 
         private:
             static ::std::shared_ptr<StatisticsService> S_INSTANCE;
-            int current_line_to_read = 1;
-            const int TOTAL_NR_LINES = 50;
 
-            //static std::vector<float> temperatures;
-            //size_t current_index = 0;
-            //const size_t ITEMS_PER_LINE = 3;
-
+        public:
             enum class CallbacksId {
                 CpuTemperature = 1,
                 GpuTemperature,
@@ -54,8 +49,32 @@ namespace statistics {
                 MaxAmbientTemperature,
             };
 
-            std::vector<float> readTemperatures();
+            void readTemperatures();
             float getValue(CallbacksId id);
+
+            float getCpuValue();
+            float getGpuValue();
+            float getAmbientValue();
+            float calculateAverageCpu();
+            float calculateAverageGpu();
+            float calculateAverageAmbient();
+            float calculateMaxCpu();
+            float calculateMaxGpu();
+            float calculateMaxAmbient();
+
+            //read values from file
+            std::vector<float> all_cpu_temperatures;
+            std::vector<float> all_gpu_temperatures;
+            std::vector<float> all_ambient_temperatures;
+            
+            int iterator_all_cpu_temps = 0;
+            int iterator_all_gpu_temps = 0;
+            int iterator_all_ambient_temps = 0;
+
+            //current iterated values
+            std::vector<float> iterated_cpu_values;
+            std::vector<float> iterated_gpu_values;
+            std::vector<float> iterated_ambient_values;
         };
     }
 }
