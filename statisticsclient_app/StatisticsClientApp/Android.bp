@@ -5,16 +5,13 @@ android_app {
     resource_dirs: [ "app/src/main/res" ],
     static_libs: [
         "statistics.service.statisticsservicemanager",
-        //"vendor.alvenan.javanativetestapp",
         "com.google.android.material_material",
         "androidx-constraintlayout_constraintlayout",
         "androidx.test.ext.junit",
         "androidx.test.espresso.core",
     ],
     required: [
-        //"vendor.alvenan.javanativetestapp",
         "statistics.service.statisticsservicemanager",
-        //"libjavanativetestapp",
     ],
     optimize: {
         enabled: false

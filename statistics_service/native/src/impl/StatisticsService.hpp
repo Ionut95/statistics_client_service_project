@@ -17,7 +17,7 @@ namespace statistics {
 
             static ::std::shared_ptr<StatisticsService> getInstance();
 
-            IStatisticsService AIDL interface callbacks
+            //IStatisticsService AIDL interface callbacks
             ::ndk::ScopedAStatus getCpuTemperature(float* value_return) override;
             ::ndk::ScopedAStatus getGpuTemperature(float* value_return) override;
             ::ndk::ScopedAStatus getAmbientTemperature(float* value_return) override;
@@ -36,7 +36,6 @@ namespace statistics {
         private:
             static ::std::shared_ptr<StatisticsService> S_INSTANCE;
 
-        public:
             enum class CallbacksId {
                 CpuTemperature = 1,
                 GpuTemperature,
@@ -62,7 +61,7 @@ namespace statistics {
             float calculateMaxGpu();
             float calculateMaxAmbient();
 
-            //read values from file
+            //read all values from file
             std::vector<float> all_cpu_temperatures;
             std::vector<float> all_gpu_temperatures;
             std::vector<float> all_ambient_temperatures;
@@ -80,4 +79,3 @@ namespace statistics {
 }
 
 #endif  // STATISTICS_SERVICE
-

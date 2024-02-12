@@ -3,7 +3,6 @@
 #include <utils/Log.h>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <algorithm>
 #include <numeric>
 
@@ -38,64 +37,55 @@ namespace statistics {
 
         ::ndk::ScopedAStatus StatisticsService::getCpuTemperature(float* value_return)
         {
-            CallbacksId id = CallbacksId::CpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::CpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getGpuTemperature(float* value_return)
         {
-            CallbacksId id = CallbacksId::GpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::GpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getAmbientTemperature(float* value_return)
         {
-            CallbacksId id = CallbacksId::AmbientTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::AmbientTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getAverageCpuTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::AverageCpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::AverageCpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getAverageGpuTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::AverageGpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::AverageGpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getAverageAmbientTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::AverageAmbientTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::AverageAmbientTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getMaxCpuTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::MaxCpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::MaxCpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getMaxGpuTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::MaxGpuTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::MaxGpuTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
         ::ndk::ScopedAStatus StatisticsService::getMaxAmbientTemperature(float *value_return)
         {
-            CallbacksId id = CallbacksId::MaxAmbientTemperature;
-            *value_return = getValue(id);
+            *value_return = getValue(CallbacksId::MaxAmbientTemperature);
             return ndk::ScopedAStatus::ok();
         }
 
@@ -105,7 +95,7 @@ namespace statistics {
 
             if (file.is_open())
             {
-                ALOGI("%s:%d: std::cout << file temperatures.csv open, reading values... ", __FUNCTION__, __LINE__);
+                ALOGI("%s:%d: file temperatures.csv open, reading values... ", __FUNCTION__, __LINE__);
                 std::string line;
                 
                 while(getline(file, line))
@@ -118,13 +108,13 @@ namespace statistics {
                     {
                         switch (current_value_index) {
                             case 0:
-                                all_cpu_temperatures.push_back(::std::stof(value));
+                                all_cpu_temperatures.push_back(std::stof(value));
                                 break;
                             case 1:
-                                all_gpu_temperatures.push_back(::std::stof(value));
+                                all_gpu_temperatures.push_back(std::stof(value));
                                 break;
                             case 2:
-                                all_ambient_temperatures.push_back(::std::stof(value));
+                                all_ambient_temperatures.push_back(std::stof(value));
                                 break;
                             default:
                                 ALOGE("%s:%d: Error when pushing values", __FUNCTION__, __LINE__);
@@ -144,11 +134,10 @@ namespace statistics {
         float StatisticsService::getCpuValue()
         {
             float cpu_value = *(all_cpu_temperatures.begin() + iterator_all_cpu_temps);
-            std::cout << "$" << iterator_all_cpu_temps << "$";
             ++iterator_all_cpu_temps;
             iterated_cpu_values.push_back(cpu_value);
 
-            if(iterator_all_cpu_temps == all_cpu_temperatures.size())
+            if((size_t)iterator_all_cpu_temps == all_cpu_temperatures.size())
                 iterator_all_cpu_temps = 0;
             
             return cpu_value;
@@ -157,11 +146,10 @@ namespace statistics {
         float StatisticsService::getGpuValue()
         {
             float gpu_value = *(all_gpu_temperatures.begin() + iterator_all_gpu_temps);
-            std::cout << "$" << iterator_all_gpu_temps << "$";
             ++iterator_all_gpu_temps;
             iterated_gpu_values.push_back(gpu_value);
 
-            if(iterator_all_gpu_temps == all_gpu_temperatures.size())
+            if((size_t)iterator_all_gpu_temps == all_gpu_temperatures.size())
                 iterator_all_gpu_temps = 0;
 
             return gpu_value;
@@ -170,11 +158,10 @@ namespace statistics {
         float StatisticsService::getAmbientValue()
         {
             float ambient_value = *(all_ambient_temperatures.begin() + iterator_all_ambient_temps);
-            std::cout << "$" << iterator_all_ambient_temps << "$";
             ++iterator_all_ambient_temps;
             iterated_ambient_values.push_back(ambient_value);
 
-            if(iterator_all_ambient_temps == all_ambient_temperatures.size())
+            if((size_t)iterator_all_ambient_temps == all_ambient_temperatures.size())
                 iterator_all_ambient_temps = 0;
 
             return ambient_value;
@@ -182,15 +169,13 @@ namespace statistics {
 
         float StatisticsService::calculateAverageCpu()
         {
-            if(iterator_all_cpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if(iterator_all_cpu_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_cpu_values.erase(iterated_cpu_values.begin() + 1, iterated_cpu_values.end()); 
 
             float sum = std::accumulate(iterated_cpu_values.begin(), iterated_cpu_values.end(), 0.0f);
-            std::cout << "$" << sum << "$";
 
-            if (sum == 0)
+            if (sum == 0.0)
             {
-                std::cout << "&sum is 0&";
                 return sum;
             }
 
@@ -199,15 +184,13 @@ namespace statistics {
 
         float StatisticsService::calculateAverageGpu()
         {
-            if(iterator_all_gpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if(iterator_all_gpu_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_gpu_values.erase(iterated_gpu_values.begin() + 1, iterated_gpu_values.end());
 
             float sum = std::accumulate(iterated_gpu_values.begin(), iterated_gpu_values.end(), 0.0f);
-            std::cout << "$" << sum << "$";
             
-            if (sum == 0)
+            if (sum == 0.0)
             {
-                std::cout << "&sum is 0&";
                 return sum;
             }
             
@@ -216,15 +199,13 @@ namespace statistics {
 
         float StatisticsService::calculateAverageAmbient()
         {
-            if (iterator_all_ambient_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if (iterator_all_ambient_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_ambient_values.erase(iterated_ambient_values.begin() + 1, iterated_ambient_values.end());
 
             float sum = std::accumulate(iterated_ambient_values.begin(), iterated_ambient_values.end(), 0.0f);
-            std::cout << "$" << sum << "$";
             
-            if (sum == 0)
+            if (sum == 0.0)
             {
-                std::cout << "&sum is 0&";
                 return sum;
             }
             
@@ -233,7 +214,7 @@ namespace statistics {
 
         float StatisticsService::calculateMaxCpu()
         {
-            if(iterator_all_cpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if(iterator_all_cpu_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_cpu_values.erase(iterated_cpu_values.begin() + 1, iterated_cpu_values.end());
 
             return *(std::max_element(iterated_cpu_values.begin(), iterated_cpu_values.end()));
@@ -241,7 +222,7 @@ namespace statistics {
 
         float StatisticsService::calculateMaxGpu()
         {
-            if(iterator_all_gpu_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if(iterator_all_gpu_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_gpu_values.erase(iterated_gpu_values.begin() + 1, iterated_gpu_values.end());
 
             return *(std::max_element(iterated_gpu_values.begin(), iterated_gpu_values.end()));
@@ -249,14 +230,11 @@ namespace statistics {
 
         float StatisticsService::calculateMaxAmbient()
         {
-            if (iterator_all_ambient_temps == 1)  //if we start over again, vector values has to be cleared excepting first element
+            if (iterator_all_ambient_temps == 1)  //when we start over, vector values have to be cleared excepting first element
                 iterated_ambient_values.erase(iterated_ambient_values.begin() + 1, iterated_ambient_values.end());
 
             return *(std::max_element(iterated_ambient_values.begin(), iterated_ambient_values.end()));
         }
-
-
-
 
         float StatisticsService::getValue(CallbacksId id)
         {
@@ -285,4 +263,3 @@ namespace statistics {
         }
     }
 }
-
