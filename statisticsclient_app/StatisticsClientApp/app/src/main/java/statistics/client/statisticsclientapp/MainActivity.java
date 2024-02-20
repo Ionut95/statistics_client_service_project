@@ -14,13 +14,13 @@ import statistics.service.statisticsservicemanager.StatisticsServiceManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private StatisticsServiceManager  stservmanager = StatisticsServiceManager.getInstance();
+    private StatisticsServiceManager  statisticsServiceManager = StatisticsServiceManager.getInstance();
     private Timer timer;
     private NumberFormat formatter = new DecimalFormat("#0.00");
 
    private void displayCpuTemperature() {
         try {
-            Float valueCpu = stservmanager.getCpuTemperature();
+            Float valueCpu = statisticsServiceManager.getCpuTemperature();
             String textView = "Cpu temperature:\n" + formatter.format(valueCpu);
             ((TextView)findViewById(R.id.textView1)).setText(textView);
         } catch (RemoteException e) {
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayGpuTemperature() {
         try {
-            Float valueGpu = stservmanager.getGpuTemperature();
+            Float valueGpu = statisticsServiceManager.getGpuTemperature();
             String textView = "Gpu temperature:\n" + formatter.format(valueGpu);
             ((TextView)findViewById(R.id.textView2)).setText(textView);
         } catch (RemoteException e) {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayAmbientTemperature() {
         try {
-            Float valueAmbient = stservmanager.getAmbientTemperature();
+            Float valueAmbient = statisticsServiceManager.getAmbientTemperature();
             String textView = "Ambient temperature:\n" + formatter.format(valueAmbient);
             ((TextView)findViewById(R.id.textView3)).setText(textView);
         } catch (RemoteException e) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayAverageCpuTemperature() {
         try {
-            Float valueAverageCpu = stservmanager.getAverageCpuTemperature();
+            Float valueAverageCpu = statisticsServiceManager.getAverageCpuTemperature();
             String textView = "Cpu average temperature:\n" + formatter.format(valueAverageCpu);
             ((TextView)findViewById(R.id.textView4)).setText(textView);
        } catch (RemoteException e) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayAverageGpuTemperature() {
         try {
-            Float valueAverageGpu = stservmanager.getAverageGpuTemperature();
+            Float valueAverageGpu = statisticsServiceManager.getAverageGpuTemperature();
             String textView = "Gpu average temperature:\n" + formatter.format(valueAverageGpu);
             ((TextView)findViewById(R.id.textView5)).setText(textView);
         } catch (RemoteException e) {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayAverageAmbientTemperature() {
         try {
-            Float valueAverageAmbient = stservmanager.getAverageAmbientTemperature();
+            Float valueAverageAmbient = statisticsServiceManager.getAverageAmbientTemperature();
             String textView = "Ambient average temperature:\n" + formatter.format(valueAverageAmbient);
             ((TextView)findViewById(R.id.textView6)).setText(textView);
         } catch (RemoteException e) {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayMaxCpuTemperature() {
         try {
-            Float valueMaxCpu = stservmanager.getMaxCpuTemperature();
+            Float valueMaxCpu = statisticsServiceManager.getMaxCpuTemperature();
             String textView = "Max cpu temperature:\n" + formatter.format(valueMaxCpu);
             ((TextView)findViewById(R.id.textView7)).setText(textView);
         } catch (RemoteException e) {
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayMaxGpuTemperature() {
         try {
-            Float valueMaxGpu = stservmanager.getMaxGpuTemperature();
+            Float valueMaxGpu = statisticsServiceManager.getMaxGpuTemperature();
             String textView = "Max gpu temperature:\n" + formatter.format(valueMaxGpu);
             ((TextView)findViewById(R.id.textView8)).setText(textView);
         } catch (RemoteException e) {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
    private void displayMaxAmbientTemperature() {
         try {
-            Float valueMaxAmbient = stservmanager.getMaxAmbientTemperature();
+            Float valueMaxAmbient = statisticsServiceManager.getMaxAmbientTemperature();
             String textView = "Max ambient temperature:\n" + formatter.format(valueMaxAmbient);
             ((TextView)findViewById(R.id.textView9)).setText(textView);
         } catch (RemoteException e) {

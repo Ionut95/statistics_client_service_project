@@ -38,46 +38,46 @@ public class StatisticsServiceManager {
 
     public Float getCpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getCpuTemperature");
-        return service.getCpuTemperature();
+        return service.GetCpuTemperature();
     }
 
     public Float getGpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getGpuTemperature");
-        return service.getGpuTemperature();
+        return service.GetGpuTemperature();
     }
 
     public Float getAmbientTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getAmbientTemperature");
-        return service.getAmbientTemperature();
+        return service.GetAmbientTemperature();
     }
 
     public Float getAverageCpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getAverageCpuTemperature");
-        return service.getAverageCpuTemperature();
+        return service.GetAverageCpuTemperature();
     }
 
     public Float getAverageGpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getAverageGpuTemperature");
-        return service.getAverageGpuTemperature();
+        return service.GetAverageGpuTemperature();
     }
 
     public Float getAverageAmbientTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getAverageAmbientTemperature");
-        return service.getAverageAmbientTemperature();
+        return service.GetAverageAmbientTemperature();
     }
 
     public Float getMaxCpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getMaxCpuTemperature");
-        return service.getMaxCpuTemperature();
+        return service.GetMaxCpuTemperature();
     }
 
     public Float getMaxGpuTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getMaxGpuTemperature");
-        return service.getMaxGpuTemperature();
+        return service.GetMaxGpuTemperature();
     }
 
     public Float getMaxAmbientTemperature() throws RemoteException {
         Log.i("StatisticsServiceManager", "W - getMaxAmbientTemperature");
-        return service.getMaxAmbientTemperature();
+        return service.GetMaxAmbientTemperature();
     }
 }

@@ -19,13 +19,13 @@
 package statistics.service.api;
 @VintfStability
 interface IStatisticsService {
-  float getCpuTemperature();
-  float getGpuTemperature();
-  float getAmbientTemperature();
-  float getAverageCpuTemperature();
-  float getAverageGpuTemperature();
-  float getAverageAmbientTemperature();
-  float getMaxCpuTemperature();
-  float getMaxGpuTemperature();
-  float getMaxAmbientTemperature();
+  float GetCpuTemperature();
+  float GetGpuTemperature();
+  float GetAmbientTemperature();
+  float GetAverageCpuTemperature();
+  float GetAverageGpuTemperature();
+  float GetAverageAmbientTemperature();
+  float GetMaxCpuTemperature();
+  float GetMaxGpuTemperature();
+  float GetMaxAmbientTemperature();
 }
