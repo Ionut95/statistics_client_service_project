@@ -15,7 +15,8 @@ using ::ndk::ScopedAStatus;
 class StatisticsService: public BnStatisticsService {
     public:
         StatisticsService();
-        ~StatisticsService();
+        ~StatisticsService() = default;
+
 
         static std::shared_ptr<StatisticsService> GetInstance();
         std::string GetServiceName();
