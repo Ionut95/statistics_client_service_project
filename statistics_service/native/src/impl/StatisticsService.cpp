@@ -22,7 +22,8 @@ std::string StatisticsService::GetServiceName() {
 }
 
 std::shared_ptr<StatisticsService> StatisticsService::GetInstance() {
-    if (instance_ == nullptr)
+    static std::shared_ptr<StatisticsService> s_Instance =  SharedRefBase::make<StatisticsService>();
+    return s_Instance;
     {
         instance_ = SharedRefBase::make<StatisticsService>();
     }
