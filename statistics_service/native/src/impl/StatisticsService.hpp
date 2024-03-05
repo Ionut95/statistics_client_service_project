@@ -1,63 +1,81 @@
+#ifndef STATISTICS_SERVICE_H_
+#define STATISTICS_SERVICE_H_
 
-#ifndef STATISTICS_SERVICE
-#define STATISTICS_SERVICE
 
-#include <aidl/statistics/service/api/BnStatisticsService.h>
 #include <vector>
 
+#include <aidl/statistics/service/api/BnStatisticsService.h>
 
 namespace statistics {
-    namespace service {
+namespace service {
 
-        class StatisticsService
-                : public ::aidl::statistics::service::api::BnStatisticsService
-        {
-        public:
-            StatisticsService();
-            ~StatisticsService();
+using ::aidl::statistics::service::api::BnStatisticsService;
+using ::ndk::ScopedAStatus;
 
-            static ::std::shared_ptr<StatisticsService> getInstance();
-
-
-            // IExampleService AIDL interface callbacks
-            ::ndk::ScopedAStatus getCpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getGpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getAmbientTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getAverageCpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getAverageGpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getAverageAmbientTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getMaxCpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getMaxGpuTemperature(float* value_return) override;
-            ::ndk::ScopedAStatus getMaxAmbientTemperature(float* value_return) override;
+class StatisticsService: public BnStatisticsService {
+    public:
+        StatisticsService();
+        ~StatisticsService() = default;
 
 
-            const std::string getServiceName(void)
-            {
-                return std::string() + descriptor + "/default";
-            }
+        static std::shared_ptr<StatisticsService> GetInstance();
+        std::string GetServiceName();
 
-        private:
-            static ::std::shared_ptr<StatisticsService> S_INSTANCE;
-            static int current_line_to_read;
-            const int TOTAL_NR_LINES = 100;
+        //IStatisticsService AIDL interface callbacks
+        ScopedAStatus GetCpuTemperature(float* value_return) override;
+        ScopedAStatus GetGpuTemperature(float* value_return) override;
+        ScopedAStatus GetAmbientTemperature(float* value_return) override;
+        ScopedAStatus GetAverageCpuTemperature(float* value_return) override;
+        ScopedAStatus GetAverageGpuTemperature(float* value_return) override;
+        ScopedAStatus GetAverageAmbientTemperature(float* value_return) override;
+        ScopedAStatus GetMaxCpuTemperature(float* value_return) override;
+        ScopedAStatus GetMaxGpuTemperature(float* value_return) override;
+        ScopedAStatus GetMaxAmbientTemperature(float* value_return) override;
 
-            vector<float> readTemperatures();
-            float getValue(CallbacksId id);
-
-            enum class CallbacksId {
-                CpuTemperature = 1,
-                GpuTemperature,
-                AmbientTemperature,
-                AverageCpuTemperature,
-                AverageGpuTemperature,
-                AverageAmbientTemperature,
-                MaxCpuTemperature,
-                MaxGpuTemperature,
-                MaxAmbientTemperature,
-            };
+    private:
+        enum class CallbacksId {
+            CpuTemperature = 1,
+            GpuTemperature,
+            AmbientTemperature,
+            AverageCpuTemperature,
+            AverageGpuTemperature,
+            AverageAmbientTemperature,
+            MaxCpuTemperature,
+            MaxGpuTemperature,
+            MaxAmbientTemperature,
         };
-    }
-}
 
+        void ReadTemperatures();
+        float GetValue(CallbacksId id);
 
-#endif  // STATISTICS_SERVICE
+        float GetCpuValue();
+        float GetGpuValue();
+        float GetAmbientValue();
+        float CalculateAverageCpu();
+        float CalculateAverageGpu();
+        float CalculateAverageAmbient();
+        float CalculateMaxCpu();
+        float CalculateMaxGpu();
+        float CalculateMaxAmbient();
+
+        //read all values from file
+        std::vector<float> all_cpu_temperatures_;
+        std::vector<float> all_gpu_temperatures_;
+        std::vector<float> all_ambient_temperatures_;
+        
+        size_t iterator_all_cpu_temps_ = 0;
+        size_t iterator_all_gpu_temps_ = 0;
+        size_t iterator_all_ambient_temps_ = 0;
+
+        //current iterated values
+        std::vector<float> iterated_cpu_values_;
+        std::vector<float> iterated_gpu_values_;
+        std::vector<float> iterated_ambient_values_;
+
+        static std::shared_ptr<StatisticsService> instance_;
+};
+
+}  //  namespace service
+}  //  namespace statistics
+
+#endif  // STATISTICS_SERVICE_H_

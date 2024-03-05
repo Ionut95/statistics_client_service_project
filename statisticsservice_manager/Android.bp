@@ -1,0 +1,8 @@
+java_library {
+    name: "statistics.service.statisticsservicemanager",
+    srcs: [ "src/**/*.java" ],
+    static_libs: [ "statistics.service.api-V2-java" ],
+    system_ext_specific: true,
+    platform_apis: true,
+    installable: true,
+}

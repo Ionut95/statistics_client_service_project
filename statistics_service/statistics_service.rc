@@ -1,4 +1,4 @@
-service statistics_service /odm/bin/statistics_service
+service statistics_service /vendor/bin/statistics_service
     class hal
     user system
     group system

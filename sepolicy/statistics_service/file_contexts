@@ -1,1 +1,1 @@
-/odm/bin/statistics_service u:object_r:statistics_service_exec:s0
+/vendor/bin/statistics_service u:object_r:statistics_service_exec:s0
